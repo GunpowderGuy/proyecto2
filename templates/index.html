@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Movie Visualizer</title>
+</head>
+<body>
+  <h1>📽️ Movie Visualizer</h1>
+
+  <!-- 1) Búsqueda por póster -->
+  <section>
+    <h2>Buscar por similitud visual</h2>
+    <form action="{{ url_for('search_visual') }}" method="post" enctype="multipart/form-data">
+      <input type="file" name="poster" accept="image/*" required>
+      <button type="submit">Subir póster y buscar similares</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <!-- 2) Búsqueda por metadatos -->
+  <section>
+    <h2>Filtrar por género / año</h2>
+    <form action="{{ url_for('search_meta') }}" method="get">
+      <label>Género: <input type="text" name="genre" placeholder="Ej: Action"></label><br>
+      <label>Año: <input type="text" name="year" placeholder="Ej: 2021"></label><br>
+      <button type="submit">Buscar</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <!-- 3) Ver películas representativas por clúster -->
+  <section>
+    <h2>Películas representativas por clúster</h2>
+    <a href="{{ url_for('clusters') }}">Ver clústeres</a>
+  </section>
+
+  <hr>
+
+  <!-- 4) Ver gráfica 2D de distribución -->
+  <section>
+    <h2>Distribución 2D de películas</h2>
+    <a href="{{ url_for('plot') }}">Ver visualización en 2D</a>
+  </section>
+</body>
+</html>

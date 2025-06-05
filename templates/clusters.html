@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  {% if movies and movies|length > 0 %}
+    <ul style="list-style: none; padding: 0;">
+      {% for m in movies %}
+        <li style="margin-bottom: 1rem;">
+          <div>
+            {% if m.poster_url %}
+              <img src="{{ m.poster_url }}" alt="{{ m.title }}" width="100">
+            {% endif %}
+            <strong>{{ m.title }}</strong> ({{ m.year }}) – {{ m.genre }}
+            <p><em>Cluster ID: {{ m.get('cluster_id', 'N/A') }}</em></p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay datos de clústeres disponibles.</p>
+  {% endif %}
+  <a href="{{ url_for('index') }}">← Volver al inicio</a>
+</body>
+</html>
