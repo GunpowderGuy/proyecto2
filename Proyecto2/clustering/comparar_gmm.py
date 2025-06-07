@@ -57,3 +57,13 @@ output_labels_npy = "./data_clustering/labels_gmm_manual.npy"
 np.save(output_labels_npy, labels_lib)
 print(f"💾 Etiquetas guardadas en '{output_labels_npy}'")
 
+
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score
+
+# y_pred_manual y y_pred_sklearn deben ser tus etiquetas del clustering
+# Si usas otras variables, cámbialo acorde a tu código
+
+print("\n📌 Métricas de comparación adicionales:")
+print("Adjusted Rand Index (ARI):", adjusted_rand_score(labels_manual, labels_lib))
+print("Normalized Mutual Info:", normalized_mutual_info_score(labels_manual, labels_lib))
+print("V-measure:", v_measure_score(labels_manual, labels_lib))
