@@ -1,1 +1,10 @@
 venv/
+
+
+# ignore everything in data_MovieLens
+/Proyecto2/data_MovieLens/*
+
+# but allow 1–9, 10–99 and 100–999 .jpg files
+#!/Proyecto2/data_MovieLens/[1-9].jpg
+#!/Proyecto2/data_MovieLens/[1-9][0-9].jpg
+#!/Proyecto2/data_MovieLens/[1-9][0-9][0-9].jpg
