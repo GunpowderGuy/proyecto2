@@ -15,55 +15,56 @@ os.makedirs("./fig_clustering", exist_ok=True)
 
 # === 1. Leer mejor k ===
 with open(K_FILE, "r") as f:
-    k_optimo = int(f.read().strip())
-print(f"📌 k seleccionado: {k_optimo}")
+    K_OPTIMO = int(f.read().strip())
+print(f"🔹 Usando k = {K_OPTIMO} leído desde 'mejor_k.txt'.")
 
 # === 2. Leer embeddings reducidos ===
 df = pd.read_csv(FEATURES_CSV)
 X = df.drop(columns=["movieId"]).values
 
-# === 3. KMeansCustom (adaptado) ===
-class KMeansCustom:
-    def __init__(self, n_clusters=3, max_iter=100, tol=1e-4, random_state=None):
-        self.n_clusters   = n_clusters
-        self.max_iter     = max_iter
-        self.tol          = tol
+# === 3. KMeansCustom mejorado ===
+
+class KMeansImproved:
+    def __init__(self, n_clusters=3, max_iter=300, tol=1e-4, random_state=None):
+        self.n_clusters = n_clusters
+        self.max_iter = max_iter
+        self.tol = tol
         self.random_state = random_state
-        self.centroids    = None
-        self.labels       = None
+        self.centroids = None
+        self.labels = None
 
     def fit(self, X):
-        n_samples, _ = X.shape
-        if self.random_state is not None:
-            np.random.seed(self.random_state)
-        idxs = np.random.choice(n_samples, self.n_clusters, replace=False)
-        self.centroids = X[idxs].copy()
+        np.random.seed(self.random_state)
+        n_samples = X.shape[0]
+        self.centroids = X[np.random.choice(n_samples, self.n_clusters, replace=False)]
 
-        for i in range(self.max_iter):
-            dists = cdist(X, self.centroids, metric='euclidean')
-            self.labels = np.argmin(dists, axis=1)
+        for it in range(self.max_iter):
+            distances = cdist(X, self.centroids)
+            self.labels = np.argmin(distances, axis=1)
 
-            new_centroids = np.empty_like(self.centroids)
-            for j in range(self.n_clusters):
-                cluster_points = X[self.labels == j]
-                if cluster_points.shape[0] > 0:
-                    new_centroids[j] = cluster_points.mean(axis=0)
-                else:
-                    rand_idx = np.random.choice(n_samples)
-                    new_centroids[j] = X[rand_idx]
+            new_centroids = np.array([
+                X[self.labels == j].mean(axis=0) if np.any(self.labels == j) else X[np.random.randint(n_samples)]
+                for j in range(self.n_clusters)
+            ])
 
-            shift = np.linalg.norm(new_centroids - self.centroids, axis=1).max()
-            if shift < self.tol:
+            if np.linalg.norm(self.centroids - new_centroids) < self.tol:
+                print(f"✅ Convergió en {it+1} iteraciones.")
                 break
             self.centroids = new_centroids
+        else:
+            print(f"⚠️ No convergió en {self.max_iter} iteraciones.")
+
+    def predict(self, X):
+        return np.argmin(cdist(X, self.centroids), axis=1)
+
 
 # Entrenar
-kmc = KMeansCustom(n_clusters=k_optimo, max_iter=200, tol=1e-4, random_state=42)
+kmc = KMeansImproved(n_clusters=K_OPTIMO, max_iter=300, tol=1e-4, random_state=42)
 kmc.fit(X)
 labels_manual = kmc.labels
 
 # === 4. KMeans de sklearn ===
-sk_model = KMeans(n_clusters=k_optimo, random_state=42, n_init=10)
+sk_model = KMeans(n_clusters=K_OPTIMO, random_state=42, n_init=10)
 labels_sklearn = sk_model.fit_predict(X)
 
 # === 5. Calcular ARI ===
@@ -84,3 +85,10 @@ plt.title("KMeans (scikit-learn)")
 plt.tight_layout()
 plt.savefig(OUTPUT_PNG)
 print(f"📊 Figura guardada en {OUTPUT_PNG}")
+
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score
+
+print("Comparación KMeans Manual Adaptado vs sklearn")
+print("Adjusted Rand Index (ARI):", adjusted_rand_score(labels_manual, labels_sklearn))
+print("Normalized Mutual Info:", normalized_mutual_info_score(labels_manual, labels_sklearn))
+print("V-measure:", v_measure_score(labels_manual, labels_sklearn))
