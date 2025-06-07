@@ -6,11 +6,11 @@ from scipy.spatial.distance import cdist
 # 0) CONFIGURACIÓN: RUTAS A TUS CSV
 # =========================================
 
-# Embeddings UMAP + etiquetas de cluster (k=3)
-EMBEDDINGS_CSV = r'C:\Users\axime\OneDrive\Documentos\proyecto 2 - ml\intento 3\embeddings_with_km3custom.csv'
+# Embeddings UMAP + etiquetas de cluster (k=4)
+EMBEDDINGS_CSV = r'./data_clustering/embeddings_with_kmcustom.csv'
 
 # movies.csv con columnas al menos: movieId,title,genres
-MOVIES_CSV    = r'C:\Users\axime\OneDrive\Documentos\proyecto 2 - ml\movies.csv'
+MOVIES_CSV    = r'../data_MovieLens/movies.csv'
 
 # =========================================
 # 1) CARGAR DATOS
