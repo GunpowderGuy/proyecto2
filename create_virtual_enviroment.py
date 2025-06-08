@@ -1,6 +1,0 @@
-python -m venv venv
-# Unix/macOS:
-source venv/bin/activate
-# Windows PowerShell:
-# .\venv\Scripts\Activate.ps1
-pip install flask numpy scipy pandas
