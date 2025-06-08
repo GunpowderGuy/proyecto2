@@ -17,7 +17,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Cargar embeddings y metadatos
-df = pd.read_csv('../clustering/data_clustering/movies_clustering_web.csv')
+df = pd.read_csv('../Proyecto2/clustering/data_clustering/movies_clustering_web.csv')
 
 # Asegurarse de que tenemos las columnas necesarias
 assert all(col in df.columns for col in ['movieId', 'title', 'genres', 'year', 'umap1', 'umap2', 'cluster_kmeans'])
@@ -61,7 +61,7 @@ def get_representative_movies(method='kmeans', n=5):
 # Ruta para servir posters
 @app.route('/poster/<int:movie_id>')
 def get_poster(movie_id):
-    poster_path = f'../data_MovieLens/poster_{movie_id}.jpg'
+    poster_path = f'../Proyecto2/data_MovieLens/poster_{movie_id}.jpg'
     if os.path.exists(poster_path):
         return send_from_directory('static', f'poster_{movie_id}.jpg')
     else:
