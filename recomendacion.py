@@ -7,10 +7,11 @@ from scipy.spatial.distance import cdist
 # =========================================
 
 # Embeddings UMAP + etiquetas de cluster (k=4)
-EMBEDDINGS_CSV = r'./data_clustering/embeddings_with_kmcustom.csv'
+EMBEDDINGS_CSV = r'./Proyecto2/clustering/data_clustering/embeddings_with_kmcustom.csv'
 
 # movies.csv con columnas al menos: movieId,title,genres
-MOVIES_CSV    = r'../data_MovieLens/movies.csv'
+#MOVIES_CSV    = r'../data_MovieLens/movies.csv'
+MOVIES_CSV    = r'./movies.csv'
 
 # =========================================
 # 1) CARGAR DATOS
